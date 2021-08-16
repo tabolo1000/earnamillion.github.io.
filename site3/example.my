@@ -1,0 +1,44 @@
+var less = require('gulp-less');
+var path = require('path');
+var gulp = require('gulp');
+//const {merge} = require("browser-sync/dist/cli/cli-options");
+//var browserSync = merge()
+var browserSync = require('browser-sync').create();
+
+gulp.task('serve', function() {
+  browserSync.init({
+    proxy: 'localhost/MyProjectSite/site/index.php',
+    files: 'localhost/MyProjectSite/site/index.php'
+  });
+})
+
+gulp.task('less', function () {
+  return gulp.src('./less/*.less')
+      .pipe(less())
+      .pipe(gulp.dest('./css'))
+      .pipe(browserSync.reload({
+        stream: true
+          })
+      );
+});
+
+gulp.task('watch', function() {
+    gulp.watch('./less/*.less', gulp.parallel('less'));
+    gulp.watch('./*.php', gulp.parallel('serve'));
+   // gulp.watch('./*.php', 'images');
+});
+
+//gulp.task('default', gulp.parallel('serve','watch'));
+
+
+
+/*gulp.task('watch', gulp.series('less','browserSync'),function (){ ////series - обединение
+  gulp.watch('./less/*.less', ['less']);
+});*/
+//gulp.task('watch', ['browserSync','less'], function (){
+//  gulp.watch('./less/**/*.less', ['less'])
+//  // Перезагрузка браузера при изменении файлов HTML или JS
+//  gulp.watch('localhost/MyProjectSite/site/*.php', browserSync.reload)
+//  gulp.watch('localhost/MyProjectSite/site/js/*.js', browserSync.reload)
+//});
+
